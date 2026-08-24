@@ -328,13 +328,16 @@ body {
     color: var(--text-muted);
 }
 
-.social-links a, .contact-cmd a {
+.social-links a, .contact-cmd a,
+.social-links a:visited, .contact-cmd a:visited {
     color: var(--text-main);
     text-decoration: none;
 }
 
-.social-links a:hover, .contact-cmd a:hover {
+.social-links a:hover, .contact-cmd a:hover,
+.social-links a:focus, .contact-cmd a:focus {
     color: var(--accent-green);
+    text-decoration: none;
 }
 
 .social-dot {
