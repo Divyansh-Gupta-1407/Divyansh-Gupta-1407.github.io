@@ -328,12 +328,12 @@ body {
     color: var(--text-muted);
 }
 
-.social-links a {
+.social-links a, .contact-cmd a {
     color: var(--text-main);
     text-decoration: none;
 }
 
-.social-links a:hover {
+.social-links a:hover, .contact-cmd a:hover {
     color: var(--accent-green);
 }
 
