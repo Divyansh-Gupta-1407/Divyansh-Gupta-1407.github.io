@@ -138,15 +138,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function handleTopCommand(cmd) {
-            const lowerCmd = cmd.toLowerCase();
-            switch(lowerCmd) {
-                case 'whoami': return 'divyansh.gupta - The coolest person here.';
+            const args = cmd.trim().split(/\s+/);
+            const baseCmd = args[0].toLowerCase();
+
+            switch(baseCmd) {
+                case 'whoami': return 'divyansh.gupta';
                 case 'date': return new Date().toString();
-                case 'help': return 'Available commands: whoami, date, projects, clear, sudo, skills, about, echo [text]';
-                case 'projects': return 'Scroll down to see my projects, or click them directly!';
-                case 'sudo': return 'Nice try... but this incident will be reported to santa.';
-                case 'skills': return 'Python, C++, ML, Backend... basically making machines do cool stuff.';
-                case 'about': return 'I am a CS student at MIT, Bengaluru building intelligent backends.';
+                case 'help': return 'Available commands: whoami, date, ls, cat, cd, clear, sudo, echo';
+                case 'sudo': return 'nice try... but this incident will be reported to santa.';
                 case 'clear': 
                     setTimeout(() => {
                         Array.from(termBody.children).forEach(child => {
@@ -156,10 +155,35 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }, 10);
                     return '';
-                case 'ls': return 'projects/  about.txt  interests.txt';
+                case 'ls': 
+                    return 'projects/ &nbsp;&nbsp;about.txt &nbsp;&nbsp;interests.txt &nbsp;&nbsp;role.txt';
+                case 'cat':
+                    if (args.length < 2) return 'cat: missing file operand';
+                    const file = args[1].toLowerCase();
+                    if (file === 'about.txt') return 'I am a CS student at MIT, Bengaluru building intelligent backends.';
+                    if (file === 'interests.txt') return '- Coding<br>- Reading<br>- Developing<br>- System Design<br>- Open Source Contribution<br>- Tinkering with Linux';
+                    if (file === 'role.txt') return 'backend engineer & ML enthusiast<br>currently seeking new opportunities';
+                    if (file === 'projects/' || file === 'projects') return 'cat: projects/: Is a directory';
+                    return `cat: ${args[1]}: No such file or directory`;
+                case 'cd':
+                    if (args.length < 2 || args[1] === '~') return '';
+                    const dir = args[1].toLowerCase();
+                    if (dir === 'projects' || dir === 'projects/') {
+                        const projectsSec = Array.from(document.querySelectorAll('.section-label')).find(el => el.textContent.includes('PROJECTS'));
+                        if (projectsSec) {
+                            setTimeout(() => projectsSec.scrollIntoView({ behavior: 'smooth' }), 100);
+                            return 'Navigating to projects...';
+                        }
+                    }
+                    if (dir === '..') return '';
+                    return `cd: ${args[1]}: No such file or directory`;
+                case 'echo':
+                    return args.slice(1).join(' ');
+                case 'rm':
+                    if (args.includes('-rf')) return "Permission denied. Also, please don't.";
+                    return "rm: missing operand";
                 default:
-                    if (lowerCmd.startsWith('echo ')) return cmd.substring(5);
-                    return `zsh: command not found: ${cmd}`;
+                    return `zsh: command not found: ${baseCmd}`;
             }
         }
     }
