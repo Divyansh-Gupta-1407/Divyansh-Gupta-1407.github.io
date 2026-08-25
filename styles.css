@@ -153,11 +153,11 @@ body {
 /* Cursor */
 .cursor {
     display: inline-block;
-    width: 0.6em;
-    height: 1.2em;
+    width: 8px;
+    height: 15px;
     background-color: var(--accent-green);
     animation: blink 1s step-end infinite;
-    vertical-align: text-bottom;
+    vertical-align: middle;
 }
 
 @keyframes blink {

@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function addInteractiveTopTerminal() {
             let inputWrapper = document.createElement('div');
             inputWrapper.className = 'cmd active-cmd';
-            inputWrapper.innerHTML = '<span class="prompt">$</span> <input type="text" class="term-input" autocomplete="off" spellcheck="false" autofocus style="background:transparent;border:none;color:var(--text-main);font-family:inherit;font-size:inherit;outline:none;width:80%;">';
+            inputWrapper.innerHTML = '<span class="prompt">$</span> <input type="text" class="term-input" autocomplete="off" spellcheck="false" autofocus style="background:transparent;border:none;color:var(--text-main);caret-color:var(--accent-green);font-family:inherit;font-size:inherit;outline:none;width:80%;">';
             termBody.appendChild(inputWrapper);
 
             let input = inputWrapper.querySelector('.term-input');
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const baseCmd = args[0].toLowerCase();
 
             switch(baseCmd) {
-                case 'whoami': return 'divyansh.gupta';
+                case 'whoami': return 'divyansh.gupta - most awesome one';
                 case 'date': return new Date().toString();
                 case 'help': return 'Available commands: whoami, date, ls, cat, cd, clear, sudo, echo';
                 case 'sudo': return 'nice try... but this incident will be reported to santa.';
@@ -172,12 +172,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     return `cat: ${args[1]}: No such file or directory`;
                 case 'cd':
                     if (args.length < 2 || args[1] === '~') return '';
-                    const dir = args[1].toLowerCase();
-                    if (dir === 'projects' || dir === 'projects/') {
-                        const projectsSec = Array.from(document.querySelectorAll('.section-label')).find(el => el.textContent.includes('PROJECTS'));
-                        if (projectsSec) {
-                            setTimeout(() => projectsSec.scrollIntoView({ behavior: 'smooth' }), 100);
-                            return 'Navigating to projects...';
+                    let dir = args[1].toLowerCase();
+                    if (dir.endsWith('/')) dir = dir.slice(0, -1); // remove trailing slash
+                    
+                    if (['projects', 'stack', 'contact', 'about'].includes(dir)) {
+                        const targetSec = Array.from(document.querySelectorAll('.section-label')).find(el => el.textContent.toLowerCase().includes(dir));
+                        if (targetSec) {
+                            setTimeout(() => targetSec.scrollIntoView({ behavior: 'smooth' }), 100);
+                            return `Navigating to ${dir}...`;
                         }
                     }
                     if (dir === '..') return '';
