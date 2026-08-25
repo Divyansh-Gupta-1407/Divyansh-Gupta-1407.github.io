@@ -107,10 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
         function addInteractiveTopTerminal() {
             let inputWrapper = document.createElement('div');
             inputWrapper.className = 'cmd active-cmd';
-            inputWrapper.innerHTML = '<span class="prompt">$</span> <input type="text" class="term-input" autocomplete="off" spellcheck="false" autofocus style="background:transparent;border:none;color:var(--text-main);caret-color:var(--accent-green);font-family:inherit;font-size:inherit;outline:none;width:80%;">';
+            inputWrapper.style.position = 'relative';
+            inputWrapper.innerHTML = `
+                <span class="prompt">$</span> 
+                <span class="input-display" style="white-space: pre;"></span><span class="cursor" style="background-color: var(--accent-green);"></span>
+                <input type="text" class="term-input" autocomplete="off" spellcheck="false" autofocus style="position:absolute; opacity:0; width:1px; height:1px;">
+            `;
             termBody.appendChild(inputWrapper);
 
             let input = inputWrapper.querySelector('.term-input');
+            let display = inputWrapper.querySelector('.input-display');
+            
+            input.addEventListener('input', () => {
+                display.textContent = input.value;
+            });
             
             // Focus input when terminal is clicked
             topTermBox.addEventListener('click', () => input.focus());
@@ -136,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     
                     this.value = '';
+                    display.textContent = '';
                     // Scroll to bottom
                     termBody.scrollTop = termBody.scrollHeight;
                 }
@@ -161,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 10);
                     return '';
                 case 'ls': 
-                    return 'projects/ &nbsp;&nbsp;about.txt &nbsp;&nbsp;interests.txt &nbsp;&nbsp;role.txt';
+                    return 'projects/ &nbsp;&nbsp;stack/ &nbsp;&nbsp;contact/ &nbsp;&nbsp;about.txt &nbsp;&nbsp;interests.txt &nbsp;&nbsp;role.txt';
                 case 'cat':
                     if (args.length < 2) return 'cat: missing file operand';
                     const file = args[1].toLowerCase();
