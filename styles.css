@@ -40,10 +40,15 @@ body {
 }
 
 .dot {
+    display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 50%;
     cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+.dot:hover {
+    opacity: 0.75;
 }
 .dot.red { background-color: #ff5f56; }
 .dot.yellow { background-color: #ffbd2e; }
