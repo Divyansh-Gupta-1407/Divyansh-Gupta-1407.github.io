@@ -6,7 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (redBtn) {
         redBtn.addEventListener('click', () => {
-            document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background-color:#000;color:#fff;font-family:monospace;font-size:1.5rem;">[Session closed by user]</div>';
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.close();
+                document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background-color:#000;color:#fff;font-family:monospace;font-size:1.5rem;">[Session closed by user]</div>';
+            }
         });
     }
 
@@ -188,25 +193,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. Bottom Terminal Interactivity
-    const contactCmd = document.querySelector('.contact-cmd');
-    if (contactCmd) {
-        // Save the old content, replace with an input
-        contactCmd.innerHTML = '<span class="prompt">$</span> <input type="text" class="term-input" value=\'mail -s "hello" gdivyansh1407@gmail.com\' autocomplete="off" spellcheck="false" style="background:transparent;border:none;color:var(--text-main);font-family:inherit;font-size:inherit;outline:none;width:80%;">';
-        const input = contactCmd.querySelector('.term-input');
-
-        input.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                let val = this.value.trim();
-                if (val.includes('mail')) {
-                    // Redirect to gmail
-                    window.open('https://mail.google.com/mail/?view=cm&fs=1&to=gdivyansh1407@gmail.com', '_blank');
-                } else if (val.toLowerCase() === 'clear') {
-                    this.value = '';
-                } else if (val) {
-                    alert(`Command executed: ${val}`);
-                }
-            }
-        });
-    }
 });
