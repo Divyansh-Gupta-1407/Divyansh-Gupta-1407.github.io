@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             inputWrapper.style.position = 'relative';
             inputWrapper.innerHTML = `
                 <span class="prompt">$</span> 
-                <span class="input-display" style="white-space: pre-wrap; word-break: break-all;"></span><span class="cursor" style="background-color: var(--accent-green);"></span>
+                <span class="input-display" style="white-space: pre-wrap; word-break: break-all;"></span><span class="cursor" style="background-color: var(--accent-green); opacity: 0.25; animation-name: none;"></span>
                 <input type="text" class="term-input" autocomplete="off" spellcheck="false" autofocus style="position:absolute; opacity:0; width:1px; height:1px; left:0; top:0;">
             `;
             termBody.appendChild(inputWrapper);
@@ -121,6 +121,19 @@ document.addEventListener('DOMContentLoaded', () => {
             input.addEventListener('input', () => {
                 display.textContent = input.value;
                 termBody.scrollTop = termBody.scrollHeight; // Auto-adjust scroll when typing
+            });
+            
+            // Dim cursor when terminal loses focus
+            const blockCursor = inputWrapper.querySelector('.cursor');
+
+            input.addEventListener('focus', () => {
+                blockCursor.style.opacity = '1';
+                blockCursor.style.animationName = 'blink';
+            });
+
+            input.addEventListener('blur', () => {
+                blockCursor.style.opacity = '0.25';
+                blockCursor.style.animationName = 'none';
             });
             
             // Focus input when terminal is clicked
