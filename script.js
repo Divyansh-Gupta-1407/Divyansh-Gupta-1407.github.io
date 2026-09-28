@@ -53,8 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
             termBody.appendChild(node);
         });
 
-        // Add interactive input immediately
+        // Add interactive input immediately, then reset scroll to top
         addInteractiveTopTerminal();
+        termBody.scrollTop = 0;
 
         function addInteractiveTopTerminal() {
             let inputWrapper = document.createElement('div');
