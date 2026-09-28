@@ -41,68 +41,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const termBody = document.querySelector('.term-body');
 
     if (termBody) {
-        // Get all original child elements and remove them
         const originalNodes = Array.from(termBody.children);
         termBody.innerHTML = '';
-        
-        // Hide terminal completely during initial setup just in case
-        // Actually, let's just let it be empty and fill it
-        
-        let i = 0;
-        
-        function typeNode() {
-            if (i < originalNodes.length) {
-                let node = originalNodes[i];
-                
-                if (node.classList.contains('cmd')) {
-                    // Check if it's the final empty prompt
-                    if (node.querySelector('.cursor') || node.textContent.trim() === '$') {
-                        addInteractiveTopTerminal();
-                        return;
-                    }
 
-                    // It's a command that needs typing
-                    let text = node.textContent.replace('$', '').trim();
-                    let p = document.createElement('div');
-                    p.className = 'cmd';
-                    p.innerHTML = '<span class="prompt">$</span> <span class="typing"></span><span class="cursor"></span>';
-                    termBody.appendChild(p);
-
-                    let typingSpan = p.querySelector('.typing');
-                    let charIndex = 0;
-
-                    function typeChar() {
-                        if (charIndex < text.length) {
-                            typingSpan.textContent += text.charAt(charIndex);
-                            charIndex++;
-                            setTimeout(typeChar, 40); // 40ms typing speed
-                        } else {
-                            p.querySelector('.cursor').remove();
-                            setTimeout(() => {
-                                i++;
-                                // Immediately append the output if next node is .out
-                                if (i < originalNodes.length && originalNodes[i].classList.contains('out')) {
-                                    termBody.appendChild(originalNodes[i]);
-                                    i++;
-                                }
-                                setTimeout(typeNode, 300); // Wait before next command
-                            }, 200);
-                        }
-                    }
-                    typeChar();
-                } else {
-                    // It's an output div that somehow appeared out of order, just append it
-                    termBody.appendChild(node);
-                    i++;
-                    typeNode();
-                }
-            } else {
-                addInteractiveTopTerminal();
+        // Instantly render all nodes except the trailing cursor prompt
+        originalNodes.forEach(node => {
+            if (node.classList.contains('cmd') && (node.querySelector('.cursor') || node.textContent.trim() === '$')) {
+                // Skip the old empty prompt — we'll replace it with the interactive one
+                return;
             }
-        }
-        
-        // Start typing after a short delay
-        setTimeout(typeNode, 500);
+            termBody.appendChild(node);
+        });
+
+        // Add interactive input immediately
+        addInteractiveTopTerminal();
 
         function addInteractiveTopTerminal() {
             let inputWrapper = document.createElement('div');
