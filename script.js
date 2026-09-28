@@ -95,9 +95,63 @@ document.addEventListener('DOMContentLoaded', () => {
             // Focus input when terminal is clicked
             topTermBox.addEventListener('click', () => input.focus());
 
+            // Command history
+            const history = [];
+            let historyIndex = -1;
+
+            // Known commands for tab autocomplete
+            const knownCommands = ['whoami', 'date', 'help', 'clear', 'sudo', 'echo ', 'ls', 'cat about.txt', 'cat role.txt', 'cat interests.txt', 'cd projects', 'cd stack', 'cd contact', 'cd about', 'rm -rf /'];
+
             input.addEventListener('keydown', function(e) {
+
+                // Tab autocomplete
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const val = this.value;
+                    const match = knownCommands.find(cmd => cmd.startsWith(val) && cmd !== val);
+                    if (match) {
+                        this.value = match;
+                        display.textContent = match;
+                    }
+                    return;
+                }
+
+                // Up arrow — go back in history
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (history.length === 0) return;
+                    historyIndex = Math.min(historyIndex + 1, history.length - 1);
+                    const cmd = history[history.length - 1 - historyIndex];
+                    this.value = cmd;
+                    display.textContent = cmd;
+                    return;
+                }
+
+                // Down arrow — go forward in history
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (historyIndex <= 0) {
+                        historyIndex = -1;
+                        this.value = '';
+                        display.textContent = '';
+                        return;
+                    }
+                    historyIndex--;
+                    const cmd = history[history.length - 1 - historyIndex];
+                    this.value = cmd;
+                    display.textContent = cmd;
+                    return;
+                }
+
                 if (e.key === 'Enter') {
                     let val = this.value.trim();
+
+                    // Push to history if non-empty and not a duplicate of last entry
+                    if (val && history[history.length - 1] !== val) {
+                        history.push(val);
+                    }
+                    historyIndex = -1; // reset history pointer
+
                     let output = document.createElement('div');
                     output.className = 'out';
                     
