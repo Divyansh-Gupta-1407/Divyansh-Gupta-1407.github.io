@@ -55,7 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add interactive input immediately, then reset scroll to top
         addInteractiveTopTerminal();
-        termBody.scrollTop = 0;
+        // Use rAF to override any browser auto-scroll that happens after DOM render
+        requestAnimationFrame(() => {
+            termBody.scrollTop = 0;
+        });
 
         function addInteractiveTopTerminal() {
             let inputWrapper = document.createElement('div');
@@ -64,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             inputWrapper.innerHTML = `
                 <span class="prompt">$</span> 
                 <span class="input-display" style="white-space: pre-wrap; word-break: break-all;"></span><span class="cursor" style="background-color: var(--accent-green); opacity: 0.25; animation-name: none;"></span>
-                <input type="text" class="term-input" autocomplete="off" spellcheck="false" autofocus style="position:absolute; opacity:0; width:1px; height:1px; left:0; top:0;">
+                <input type="text" class="term-input" autocomplete="off" spellcheck="false" style="position:absolute; opacity:0; width:1px; height:1px; left:0; top:0;">
             `;
             termBody.appendChild(inputWrapper);
 
